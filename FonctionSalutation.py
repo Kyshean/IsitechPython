@@ -8,21 +8,17 @@ Retourne "Bonne nuit" pour les autres heures
 '''
 
 from datetime import *
-heure_actuelle = datetime.today().strftime("%H:%M:%S")
-nom = input("Entrez votre nom ici:")
+heure_actuelle = int(datetime.today().strftime("%H"))
+nom = input("Entrez votre nom ici: ")
 
-def saluer(nom):
-    if heure_actuelle("%H") > 6 and heure_actuelle("%H") < 12:
-        print("bon matin {nom}!")
-        return saluer(nom)
-    elif heure_actuelle("%H") > 12 and heure_actuelle("%H") < 18:
-        print("Bon midi {nom}!")
-        return saluer(nom)
-    elif heure_actuelle("%H") >= 18 and heure_actuelle("%H") < 24:
-        print("Bonne soirée {nom}.")
-        return saluer(nom)
+def saluer_personne(nom):
+    if 6 <= heure_actuelle < 12:
+        return f"bon matin {nom}!"
+    elif 12 <= heure_actuelle < 18:
+        return f"bonne après-midi {nom}!"
+    elif 18 <= heure_actuelle() < 24:
+        return f"Bonne soirée {nom}"
     else:
-        print("Bonne nuit {nom}.")
-        return saluer(nom)
+        return f"Bonne nuit {nom}"
 
-print(saluer(nom))
+print(saluer_personne(nom))
