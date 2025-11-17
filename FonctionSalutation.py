@@ -8,10 +8,11 @@ Retourne "Bonne nuit" pour les autres heures
 '''
 
 from datetime import *
-heure_actuelle = int(datetime.today().strftime("%H"))
+
+heure_actuelle = int(datetime.today().strftime("%H")) # On passe l'heure en tant que entier pour pouvoir mieux les utiliser dans la comparaison.
 nom = input("Entrez votre nom ici: ")
 
-def saluer_personne(nom):
+def saluer_personne(nom): # On compare l'heure directement dans la fonction et l'appel de celle ci.
     if 6 <= heure_actuelle < 12:
         return f"bon matin {nom}!"
     elif 12 <= heure_actuelle < 18:
