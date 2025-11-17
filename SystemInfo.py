@@ -2,7 +2,6 @@
 TP Informations système
 
 Créer un script permettant d'afficher les informations système de base telles que le nom de l'hôte, l'adresse IP, le système d'exploitation et la version de Python installée.
-Utilisez des bibliothèques standard telles que os, platform et socket pour récupérer ces informations.
 '''
 
 import os
