@@ -12,8 +12,8 @@ import sys
 host_architecture = platform.machine()
 host_info = platform.uname()
 host_ip = socket.gethostbyname(host_info.node)
-
-machine = {host_architecture, host_info.node, host_info.machine, host_info.processor, host_info.system, host_ip}
+host_system = platform.system()
+machine = {host_architecture, host_info.node, host_info.machine, host_info.processor, host_info.system, host_ip, host_system}
 
 for i in machine:
     print(i)
