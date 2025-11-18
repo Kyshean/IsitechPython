@@ -13,6 +13,14 @@ heure_actuelle = int(datetime.today().strftime("%H")) # On passe l'heure en tant
 nom = input("Entrez votre nom ici: ")
 
 def saluer_personne(nom): # On compare l'heure directement dans la fonction et l'appel de celle ci.
+    """Salue la personne entrée dans le CLI en fonction de l'heure
+
+    Args:
+        nom (str): Nom de la personne a saluer
+
+    Returns:
+        str: Salutation + nom + heure_actuelle
+    """
     if 6 <= heure_actuelle < 12:
         return f"bon matin {nom}, il est {heure_actuelle}h"
     elif 12 <= heure_actuelle < 18:

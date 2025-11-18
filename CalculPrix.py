@@ -19,6 +19,14 @@ except TypeError:
     erreur = True
 
 def calculer_ttc(prix_ht):
+    """Calcule le prix TTC entré
+
+    Args:
+        prix_ht (float): prix entré par input
+
+    Returns:
+        float : prix comprenant la TVA
+    """
     tva_ajoutee = prix_ht*0.2
     prix_ttc = prix_ht + tva_ajoutee
     return prix_ttc
