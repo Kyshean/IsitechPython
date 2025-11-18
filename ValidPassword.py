@@ -12,7 +12,7 @@ import re
 
 def mot_de_passe_valide(password):
     pattern = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[#&'(-_)=!:;,?./§%*µ$£¤^¨@`|{#~²}]).{8,}$"
-    verification_password = bool(re.search(pattern, password)) # Enregistrement dans un booléen de la vérification par RegEx
+    verification_password = bool(re.findall(pattern, password)) # Enregistrement dans un booléen de la vérification par RegEx
     return verification_password
 
 # Exemple d'utilisation :
