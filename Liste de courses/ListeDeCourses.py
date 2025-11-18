@@ -7,40 +7,62 @@ compter_articles(courses) : retourne le nombre d'articles
 
 Ajoutez des feature permettant d'enregistrez le fichier dans un fichier texte pour la vérifier.
 """
-with open("Liste de courses/Liste.txt") as courses:
-    lignes = courses.readline()
 
 def afficher_liste(courses):
+    """Affiche l'entièreté de la liste de courses
+
+    Args:
+        courses (fichier): Correspond à la liste de courses
+    """
     print("\nListe des courses :")
-    if not courses:
-        print("La liste est vide.")
-    else:
-        print (courses.read())
+    with open("Liste de courses/Liste.txt") as courses:
+        if not courses:
+            print("La liste est vide.")
+        else:
+            print (courses.read())
 
 def ajouter_article(courses, article):
-        with open("Liste de courses/Liste.txt", "a") as courses:
+    """
+    Ajout d'un article à la liste de courses
+
+    Args:
+        courses (fichier): Contient la liste des articles
+        article (str): article à ajouter
+    """
+    with open("Liste de courses/Liste.txt", "a") as courses:
             courses.write(f"{article} \n")
-        print(f"L'article '{article}' a été ajouté.")
+            print(f"L'article '{article}' a été ajouté.")
 
 def retirer_article(courses, article):
-        with open("Liste de courses/Liste.txt", "w") as courses:
-            article_trouve = False
-            for ligne in lignes:
-                if ligne.strip() != article:
-                    courses.write(ligne)
-                    article_trouve = True
-                else:
-                    break
-        if article_trouve:
-            print(f"l'article {article} a été retiré avec succès")
-        else:
-            print(f"Votre liste de courses ne comporte pas {article}")
+    """Retrait d'un article de la liste de courses
+
+    Args:
+        courses (fichier): Liste des articles
+        article (str): L'article à retirer
+    """
+    with open("Liste de courses/Liste.txt") as f:
+        lignes = f.readlines()
+    with open("Liste de courses/Liste.txt", "w") as f:
+        article_trouve = False
+        for ligne in lignes:
+            if ligne.strip() != article:
+                f.write(ligne)
+            else:
+                article_trouve = True
+    if article_trouve:
+        print(f"L'article '{article}' a été retiré avec succès.")
+    else:
+        print(f"Votre liste de courses ne comporte pas '{article}'.")
 
 
 def compter_articles(courses):
-    return len(courses)
+    with open("Liste de courses/Liste.txt") as f:
+            lignes = f.readlines()
+            return len([ligne for ligne in lignes if ligne.strip()])
 
 def menu():
+    """Définition basique d'un menu
+    """
     courses = open("Liste de courses/Liste.txt")
     while True:
         print("\n--- Menu Liste de Courses ---")
