@@ -15,6 +15,8 @@ try:
 except ValueError:
     erreur = True
     print("Vous devez entrer un nombre, entier ou décimal.")
+except TypeError:
+    erreur = True
 
 def calculer_ttc(prix_ht):
     tva_ajoutee = prix_ht*0.2
@@ -23,5 +25,7 @@ def calculer_ttc(prix_ht):
 
 if erreur:
     print("Arrêt du calcul.")
+elif prix_ht <=0:
+    print("Arrêt du calcul. Veuillez entrer un nombre positif.")
 else:
     print (f"Le prix comprenant la TVA s'élève à: {round(calculer_ttc(prix_ht), 2)} €") # Fonction round(calculer_ttc), 2) permet de limiter les décimales à 2
