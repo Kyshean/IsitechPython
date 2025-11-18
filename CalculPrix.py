@@ -9,11 +9,19 @@ Arrondit le résultat à 2 décimales
 
 # TVA 20% correspond à multiplier le prix par 0.2 environ
 
-prix_ht = float(input("Entrez le prix :"))
+try:
+    prix_ht = float(input("Entrez le prix :"))
+    erreur = False
+except ValueError:
+    erreur = True
+    print("Vous devez entrer un nombre, entier ou décimal.")
 
 def calculer_ttc(prix_ht):
     tva_ajoutee = prix_ht*0.2
     prix_ttc = prix_ht + tva_ajoutee
-    return prix_ttc 
+    return prix_ttc
 
-print (f"Le prix comprenant la TVA s'élève à: {round(calculer_ttc(prix_ht), 2)} €") # Fonction round(calculer_ttc), 2) permet de limiter les décimales à 2
+if erreur:
+    print("Arrêt du calcul.")
+else:
+    print (f"Le prix comprenant la TVA s'élève à: {round(calculer_ttc(prix_ht), 2)} €") # Fonction round(calculer_ttc), 2) permet de limiter les décimales à 2
