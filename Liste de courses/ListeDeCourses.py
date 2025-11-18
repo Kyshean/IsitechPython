@@ -56,7 +56,7 @@ def retirer_article(courses, article):
 
 
 def compter_articles(courses):
-    with open("Liste de courses/Liste.txt") as f:
+    with open("Liste de courses/Liste.txt",) as f:
             lignes = f.readlines()
             return len([ligne for ligne in lignes if ligne.strip()])
 
