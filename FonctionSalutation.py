@@ -14,12 +14,12 @@ nom = input("Entrez votre nom ici: ")
 
 def saluer_personne(nom): # On compare l'heure directement dans la fonction et l'appel de celle ci.
     if 6 <= heure_actuelle < 12:
-        return f"bon matin {nom}!"
+        return f"bon matin {nom}, il est {heure_actuelle}h"
     elif 12 <= heure_actuelle < 18:
-        return f"bonne après-midi {nom}!"
+        return f"bonne après-midi {nom}, il est {heure_actuelle}h"
     elif 18 <= heure_actuelle() < 24:
-        return f"Bonne soirée {nom}"
+        return f"Bonne soirée {nom}, il est {heure_actuelle}h"
     else:
-        return f"Bonne nuit {nom}"
+        return f"Bonne nuit {nom}, il est {heure_actuelle}h"
 
 print(saluer_personne(nom))
