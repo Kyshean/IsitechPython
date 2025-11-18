@@ -14,6 +14,6 @@ prix_ht = float(input("Entrez le prix :"))
 def calculer_ttc(prix_ht):
     tva_ajoutee = prix_ht*0.2
     prix_ttc = prix_ht + tva_ajoutee
-    return prix_ttc
+    return prix_ttc 
 
-print (f"Le prix comprenant la TVA s'élève à: {round(calculer_ttc(prix_ht), 2)} €")
+print (f"Le prix comprenant la TVA s'élève à: {round(calculer_ttc(prix_ht), 2)} €") # Fonction round(calculer_ttc), 2) permet de limiter les décimales à 2
