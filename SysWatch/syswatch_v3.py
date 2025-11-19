@@ -14,14 +14,13 @@ import time
 import sys
 from types import SimpleNamespace
 from datetime import datetime
-
 import collector
 from traitement import calculer_moyennes, detecter_pics
 
 
-def _bytes_to_gb(b):
+def octets_to_go(octet):
     try:
-        return float(b) / (1024 ** 3)
+        return float(octet) / (1024 ** 3)
     except Exception:
         return 0.0
 
