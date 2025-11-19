@@ -13,7 +13,6 @@ import os
 import time
 import sys
 from types import SimpleNamespace
-from datetime import datetime
 import collector
 from traitement import calculer_moyennes, detecter_pics
 
@@ -27,9 +26,6 @@ def octets_to_go(octet):
 
 def exporter_csv(metriques, fichier):
     """Exporte les métriques essentielles dans un CSV (append si existe).
-
-    Simplifié : on construit un dict de champs simples puis on utilise
-    `csv.DictWriter` avec `with open`.
     """
     # Préparer dossier
     dossier_export = os.path.dirname(fichier)
@@ -41,11 +37,10 @@ def exporter_csv(metriques, fichier):
     mem_info = metriques.get('memoire', {})
 
     ligne_csv = {
-        'timestamp': metriques.get('timestamp'),
         'hostname': systeme_info.get('hostname'),
         'cpu_percent': cpu_info.get('utilisation'),
-        'mem_total_gb': _bytes_to_gb(mem_info.get('total', 0)),
-        'mem_dispo_gb': _bytes_to_gb(mem_info.get('disponible', 0)),
+        'mem_total_gb': octets_to_go(mem_info.get('total', 0)),
+        'mem_dispo_gb': octets_to_go(mem_info.get('disponible', 0)),
         'mem_percent': mem_info.get('pourcentage'),
     }
 
@@ -68,7 +63,7 @@ def exporter_csv(metriques, fichier):
 
 
 def exporter_json(metriques, fichier):
-    """Sauvegarde les métriques complètes en JSON lisible (simplifié)."""
+    """Sauvegarde les métriques complètes en JSON lisible."""
     dossier_export = os.path.dirname(fichier)
     if dossier_export:
         os.makedirs(dossier_export, exist_ok=True)
@@ -83,10 +78,10 @@ def afficher_resume(metriques):
     print(f"Relevé: {metriques.get('timestamp')}")
     print(f"Host: {systeme_info.get('hostname')} - OS: {systeme_info.get('os')}")
     print(f"CPU: {cpu_info.get('utilisation')}%")
-    print(f"RAM: { _bytes_to_gb(mem_info.get('total',0)):.2f} Go total, {mem_info.get('pourcentage')}% utilisé")
+    print(f"RAM: { octets_to_go(mem_info.get('total',0)):.2f} Go total, {mem_info.get('pourcentage')}% utilisé")
 
 
-def collecter_en_continu(intervalle=5, nombre=0, fichier_csv='./Syswatch/Exports/syswatch_history.csv'):
+def collecter_en_continu(intervalle=5, nombre=0, fichier_csv='./SysWatch/Exports/syswatch_history.csv'):
     """Collecte en continu les métriques, les affiche et les sauvegarde en CSV.
 
     nombre=0 -> infini
@@ -114,7 +109,6 @@ def detecter_pics_csv(fichier_csv, seuil_cpu=80.0, seuil_mem=80.0):
 
 
 def main():
-    # Parser simple pour débutant (remplace argparse)
     valeurs_defaut = {
         'continu': False,
         'intervalle': 5,
@@ -162,13 +156,9 @@ def main():
 
     options = lire_arguments(sys.argv[1:])
 
-    # générer un horodatage pour les noms de fichiers par défaut
-    ts = datetime.now().strftime('%Y%m%d_%H%M%S')
-
-    # si l'utilisateur utilise le nom par défaut, horodater le fichier
+# Nommage des fichiers par défaut
     csv_default_name = './SysWatch/Exports/syswatch_history.csv'
     json_default_name = './SysWatch/Exports/last_metrics.json'
-
     csv_file = options.csv
     json_file = options.json
     if csv_file.endswith(os.path.basename(csv_default_name)):
