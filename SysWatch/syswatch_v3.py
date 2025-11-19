@@ -39,8 +39,8 @@ def exporter_csv(metriques, fichier):
     ligne_csv = {
         'hostname': systeme_info.get('hostname'),
         'cpu_percent': cpu_info.get('utilisation'),
-        'mem_total_gb': octets_to_go(mem_info.get('total', 0)),
-        'mem_dispo_gb': octets_to_go(mem_info.get('disponible', 0)),
+        'mem_total_go': octets_to_go(mem_info.get('total', 0)),
+        'mem_dispo_go': octets_to_go(mem_info.get('disponible', 0)),
         'mem_percent': mem_info.get('pourcentage'),
     }
 
@@ -114,10 +114,10 @@ def main():
     json_default_name = './SysWatch/Exports/last_metrics.json'
 
     valeurs_defaut = {
-        'continu': False,
+        'continu': True,
         'intervalle': 5,
-        'nombre': 0,
-        'stats': False,
+        'nombre': 10,
+        'stats': True,
         'csv': csv_default_name,
         'json': json_default_name,
     }
