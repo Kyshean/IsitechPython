@@ -21,11 +21,11 @@ def octets_vers_go(octets):
 
 def afficher_systeme(data):
     """Affiche les informations système (dictionnaire retourné par collector)."""
-    s = data
+    systeme_data = data
     print("="*25+" Système "+"="*25)
-    print(f"OS: {s.get('os')}")
-    print(f"Architecture: {s.get('architecture')}")
-    print(f"Hostname: {s.get('hostname')}")
+    print(f"OS: {systeme_data.get('os')}")
+    print(f"Architecture: {systeme_data.get('architecture')}")
+    print(f"Hostname: {systeme_data.get('hostname')}")
 
 
 def afficher_cpu(data):
@@ -50,11 +50,11 @@ def afficher_disques(disques):
     if not disques:
         print("Aucune partition accessible trouvée.")
         return
-    for d in disques:
-        print(f"Point de montage: {d.get('point_montage')}")
-        print(f"  Total: {octets_vers_go(d.get('total'))}")
-        print(f"  Utilisé: {octets_vers_go(d.get('utilise'))}")
-        print(f"  Pourcentage: {d.get('pourcentage')} %")
+    for disque in disques:
+        print(f"Point de montage: {disque.get('point_montage')}")
+        print(f"  Total: {octets_vers_go(disque.get('total'))}")
+        print(f"  Utilisé: {octets_vers_go(disque.get('utilise'))}")
+        print(f"  Pourcentage: {disque.get('pourcentage')} %")
 
 def display_processor_info(data_cpu=None):
     """Affiche les informations processeur.

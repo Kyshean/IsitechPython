@@ -15,15 +15,15 @@ def calculer_moyennes(fichier_csv):
     cpu_vals = []
     mem_vals = []
     try:
-        with open(fichier_csv, newline='') as fh:
-            reader = csv.DictReader(fh)
-            for row in reader:
+        with open(fichier_csv, newline='') as fichier_handle:
+            reader = csv.DictReader(fichier_handle)
+            for ligne in reader:
                 try:
-                    cpu_vals.append(float(row.get('cpu_percent', 0) or 0))
+                    cpu_vals.append(float(ligne.get('cpu_percent', 0) or 0))
                 except Exception:
                     pass
                 try:
-                    mem_vals.append(float(row.get('mem_percent', 0) or 0))
+                    mem_vals.append(float(ligne.get('mem_percent', 0) or 0))
                 except Exception:
                     pass
     except FileNotFoundError:
@@ -44,19 +44,19 @@ def detecter_pics(fichier_csv, seuil_cpu=80.0, seuil_mem=80.0):
     """
     pics = []
     try:
-        with open(fichier_csv, newline='') as fh:
-            reader = csv.DictReader(fh)
-            for row in reader:
+        with open(fichier_csv, newline='') as fichier_handle:
+            reader = csv.DictReader(fichier_handle)
+            for ligne in reader:
                 try:
-                    cpu = float(row.get('cpu_percent', 0) or 0)
+                    cpu = float(ligne.get('cpu_percent', 0) or 0)
                 except Exception:
                     cpu = 0.0
                 try:
-                    mem = float(row.get('mem_percent', 0) or 0)
+                    mem = float(ligne.get('mem_percent', 0) or 0)
                 except Exception:
                     mem = 0.0
                 if cpu > seuil_cpu or mem > seuil_mem:
-                    pics.append({'timestamp': row.get('timestamp'), 'cpu_percent': cpu, 'mem_percent': mem})
+                    pics.append({'timestamp': ligne.get('timestamp'), 'cpu_percent': cpu, 'mem_percent': mem})
     except FileNotFoundError:
         return []
     return pics

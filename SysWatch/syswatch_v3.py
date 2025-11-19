@@ -11,7 +11,8 @@ import csv
 import json
 import os
 import time
-import argparse
+import sys
+from types import SimpleNamespace
 from datetime import datetime
 
 import collector
@@ -26,57 +27,64 @@ def _bytes_to_gb(b):
 
 
 def exporter_csv(metriques, fichier):
-    """Exporte les métriques essentielles dans un CSV (append si existe)."""
-    headers = ['timestamp', 'hostname', 'cpu_percent', 'mem_total_gb', 'mem_dispo_gb', 'mem_percent', 'disk_root_percent']
-    # s'assurer que le dossier d'export existe
-    dirpath = os.path.dirname(fichier)
-    if dirpath:
-        os.makedirs(dirpath, exist_ok=True)
-    exists = os.path.exists(fichier)
-    row = {}
-    row['timestamp'] = metriques.get('timestamp')
-    sys = metriques.get('systeme', {})
-    row['hostname'] = sys.get('hostname')
-    cpu = metriques.get('cpu', {})
-    row['cpu_percent'] = cpu.get('utilisation')
-    mem = metriques.get('memoire', {})
-    row['mem_total_gb'] = f"{_bytes_to_gb(mem.get('total', 0)):.2f}"
-    row['mem_dispo_gb'] = f"{_bytes_to_gb(mem.get('disponible', 0)):.2f}"
-    row['mem_percent'] = mem.get('pourcentage')
-    # chercher partition root '/'
-    disk_percent = None
-    for d in metriques.get('disques', []):
-        if d.get('point_montage') == '/':
-            disk_percent = d.get('pourcentage')
-            break
-    if disk_percent is None and metriques.get('disques'):
-        disk_percent = metriques.get('disques')[0].get('pourcentage')
-    row['disk_root_percent'] = disk_percent
+    """Exporte les métriques essentielles dans un CSV (append si existe).
 
-    with open(fichier, 'a', newline='') as fh:
-        writer = csv.DictWriter(fh, fieldnames=headers)
-        if not exists:
+    Simplifié : on construit un dict de champs simples puis on utilise
+    `csv.DictWriter` avec `with open`.
+    """
+    # Préparer dossier
+    dossier_export = os.path.dirname(fichier)
+    if dossier_export:
+        os.makedirs(dossier_export, exist_ok=True)
+
+    systeme_info = metriques.get('systeme', {})
+    cpu_info = metriques.get('cpu', {})
+    mem_info = metriques.get('memoire', {})
+
+    ligne_csv = {
+        'timestamp': metriques.get('timestamp'),
+        'hostname': systeme_info.get('hostname'),
+        'cpu_percent': cpu_info.get('utilisation'),
+        'mem_total_gb': _bytes_to_gb(mem_info.get('total', 0)),
+        'mem_dispo_gb': _bytes_to_gb(mem_info.get('disponible', 0)),
+        'mem_percent': mem_info.get('pourcentage'),
+    }
+
+    # disk_root_percent : chercher '/' sinon None
+    racine_pourcentage_disque = None
+    for disque in metriques.get('disques', []):
+        if disque.get('point_montage') == '/':
+            racine_pourcentage_disque = disque.get('pourcentage')
+            break
+    if racine_pourcentage_disque is None and metriques.get('disques'):
+        racine_pourcentage_disque = metriques.get('disques')[0].get('pourcentage')
+    ligne_csv['disk_root_percent'] = racine_pourcentage_disque
+
+    fichier_existe = os.path.exists(fichier)
+    with open(fichier, 'a', newline='') as fichier_handle:
+        writer = csv.DictWriter(fichier_handle, fieldnames=list(ligne_csv.keys()))
+        if not fichier_existe:
             writer.writeheader()
-        writer.writerow(row)
+        writer.writerow(ligne_csv)
 
 
 def exporter_json(metriques, fichier):
-    """Sauvegarde les métriques complètes en JSON lisible."""
-    dirpath = os.path.dirname(fichier)
-    if dirpath:
-        os.makedirs(dirpath, exist_ok=True)
-    with open(fichier, 'w') as fh:
-        json.dump(metriques, fh, indent=2)
+    """Sauvegarde les métriques complètes en JSON lisible (simplifié)."""
+    dossier_export = os.path.dirname(fichier)
+    if dossier_export:
+        os.makedirs(dossier_export, exist_ok=True)
+    with open(fichier, 'w', encoding='utf-8') as fichier_handle:
+        json.dump(metriques, fichier_handle, indent=2, ensure_ascii=False)
 
 
 def afficher_resume(metriques):
-    sys = metriques.get('systeme', {})
-    cpu = metriques.get('cpu', {})
-    mem = metriques.get('memoire', {})
+    systeme_info = metriques.get('systeme', {})
+    cpu_info = metriques.get('cpu', {})
+    mem_info = metriques.get('memoire', {})
     print(f"Relevé: {metriques.get('timestamp')}")
-    print(f"Host: {sys.get('hostname')} - OS: {sys.get('os')}")
-    print(f"CPU: {cpu.get('utilisation')}%")
-    print(f"RAM: { _bytes_to_gb(mem.get('total',0)):.2f} Go total, {mem.get('pourcentage')}% utilisé")
+    print(f"Host: {systeme_info.get('hostname')} - OS: {systeme_info.get('os')}")
+    print(f"CPU: {cpu_info.get('utilisation')}%")
+    print(f"RAM: { _bytes_to_gb(mem_info.get('total',0)):.2f} Go total, {mem_info.get('pourcentage')}% utilisé")
 
 
 def collecter_en_continu(intervalle=5, nombre=0, fichier_csv='./Syswatch/Exports/syswatch_history.csv'):
@@ -87,9 +95,9 @@ def collecter_en_continu(intervalle=5, nombre=0, fichier_csv='./Syswatch/Exports
     compteur = 0
     try:
         while True:
-            met = collector.collecter_tout()
-            afficher_resume(met)
-            exporter_csv(met, fichier_csv)
+            metrics_collected = collector.collecter_tout()
+            afficher_resume(metrics_collected)
+            exporter_csv(metrics_collected, fichier_csv)
             compteur += 1
             if nombre and compteur >= nombre:
                 break
@@ -107,14 +115,53 @@ def detecter_pics_csv(fichier_csv, seuil_cpu=80.0, seuil_mem=80.0):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='SysWatch v3 - export & collecte continue')
-    parser.add_argument('--continu', action='store_true', help='Lancer la collecte continue')
-    parser.add_argument('--intervalle', type=int, default=5, help='Intervalle en secondes')
-    parser.add_argument('--nombre', type=int, default=0, help='Nombre de collectes (0 = infini)')
-    parser.add_argument('--stats', action='store_true', help='Afficher statistiques depuis le CSV')
-    parser.add_argument('--csv', default='./SysWatch/Exports/sysWatch_history.csv', help='Fichier CSV d\'historique')
-    parser.add_argument('--json', default='./SysWatch/Exports/last_metrics.json', help='Fichier JSON de sortie pour la collecte unique')
-    args = parser.parse_args()
+    # Parser simple pour débutant (remplace argparse)
+    valeurs_defaut = {
+        'continu': False,
+        'intervalle': 5,
+        'nombre': 0,
+        'stats': False,
+        'csv': './SysWatch/Exports/syswatch_history.csv',
+        'json': './SysWatch/Exports/last_metrics.json',
+    }
+
+    def lire_arguments(liste_arguments):
+        """Lit une liste d'arguments (ex: ['--continu','--intervalle','10'])
+        et retourne un objet simple avec les valeurs.
+        """
+        valeurs = valeurs_defaut.copy()
+        index = 0
+        while index < len(liste_arguments):
+            option = liste_arguments[index]
+            if option == '--continu':
+                valeurs['continu'] = True
+                index += 1
+            elif option == '--stats':
+                valeurs['stats'] = True
+                index += 1
+            elif option == '--intervalle' and index + 1 < len(liste_arguments):
+                try:
+                    valeurs['intervalle'] = int(liste_arguments[index + 1])
+                except Exception:
+                    pass
+                index += 2
+            elif option == '--nombre' and index + 1 < len(liste_arguments):
+                try:
+                    valeurs['nombre'] = int(liste_arguments[index + 1])
+                except Exception:
+                    pass
+                index += 2
+            elif option == '--csv' and index + 1 < len(liste_arguments):
+                valeurs['csv'] = liste_arguments[index + 1]
+                index += 2
+            elif option == '--json' and index + 1 < len(liste_arguments):
+                valeurs['json'] = liste_arguments[index + 1]
+                index += 2
+            else:
+                index += 1
+        return SimpleNamespace(**valeurs)
+
+    options = lire_arguments(sys.argv[1:])
 
     # générer un horodatage pour les noms de fichiers par défaut
     ts = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -123,33 +170,33 @@ def main():
     csv_default_name = './SysWatch/Exports/syswatch_history.csv'
     json_default_name = './SysWatch/Exports/last_metrics.json'
 
-    csv_file = args.csv
-    json_file = args.json
+    csv_file = options.csv
+    json_file = options.json
     if csv_file.endswith(os.path.basename(csv_default_name)):
         csv_file = csv_file.replace('.csv', f'_{ts}.csv')
     if json_file.endswith(os.path.basename(json_default_name)):
         json_file = json_file.replace('.json', f'_{ts}.json')
 
-    if args.stats:
-        stats = calculer_stats(args.csv)
+    if options.stats:
+        stats = calculer_stats(options.csv)
         if stats is None:
-            print('Fichier CSV introuvable ou vide:', args.csv)
+            print('Fichier CSV introuvable ou vide:', options.csv)
             return
         print('Statistiques CPU:', stats.get('cpu'))
         print('Statistiques mémoire (%):', stats.get('mem_percent'))
-        pics = detecter_pics_csv(args.csv)
+        pics = detecter_pics_csv(options.csv)
         print(f'Pics détectés: {len(pics)}')
         return
 
-    if args.continu:
-        collecter_en_continu(intervalle=args.intervalle, nombre=args.nombre, fichier_csv=csv_file)
+    if options.continu:
+        collecter_en_continu(intervalle=options.intervalle, nombre=options.nombre, fichier_csv=csv_file)
         return
 
     # collecte unique
-    met = collector.collecter_tout()
-    afficher_resume(met)
-    exporter_csv(met, csv_file)
-    exporter_json(met, json_file)
+    metrics_collected = collector.collecter_tout()
+    afficher_resume(metrics_collected)
+    exporter_csv(metrics_collected, csv_file)
+    exporter_json(metrics_collected, json_file)
 
 
 if __name__ == '__main__':
