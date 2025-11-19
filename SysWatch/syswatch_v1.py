@@ -19,12 +19,16 @@ disks = psutil.disk_partitions()
 # Déclaration de l'affichage
 
 def display_processor_info():
+    """Affiche les informations du processeur dans la console
+    """
     print(f"="*25+" Informations Processeur "+"="*25)
     print(f"\nLe taux d'utilisation du processeur est {host_cpu_usage}%")
     print(f"Le processeur dispose de {host_logic_heart} coeurs logiques")
     print(f"Le processeur dispose de {host_phys_heart} coeurs physique \n")
 
 def display_system_info():
+    """Affiche les informations du système dans la console
+    """
     print(f"Nom du poste : {host_info.node} \n")
     print("="*25+" Informations Système "+"="*25)
     print(f"\n Ce poste dispose d'un système d'exploitation {host_info.system}")
@@ -32,12 +36,16 @@ def display_system_info():
     print(f"La version de python est la suivante {host_python}\n")
 
 def display_ram_info():
+    """Affiche les informations de mémoire Vive dans la Console
+    """
     print(f"="*25+" Informations Mémoire Vive "+"="*25)
     print(f"\nLe poste dispose de {round(host_ram, 1)}Go de mémoire Vive (RAM)")
     print(f"Le poste utilise présentement {round(used_ram, 1)}% de RAM")
     print(f"La mémoire Vive (RAM) libre est de {free_ram}%")
 
 def display_disk_info():
+    """Affiche les informations de chaque disque et chaque partition
+    """
     for partition in disks:
         print(f"="*25+" Informations sur la partition "+"="*25)
         try:

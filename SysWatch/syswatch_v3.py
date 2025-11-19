@@ -44,7 +44,7 @@ def exporter_csv(metriques, fichier):
         'mem_percent': mem_info.get('pourcentage'),
     }
 
-    # disk_root_percent : chercher '/' sinon None
+    # Trouver l'utilisation disque de la racine '/'
     racine_pourcentage_disque = None
     for disque in metriques.get('disques', []):
         if disque.get('point_montage') == '/':
@@ -72,6 +72,7 @@ def exporter_json(metriques, fichier):
 
 
 def afficher_resume(metriques):
+    """Affiche un résumé des métriques collectées."""
     systeme_info = metriques.get('systeme', {})
     cpu_info = metriques.get('cpu', {})
     mem_info = metriques.get('memoire', {})
@@ -109,6 +110,8 @@ def detecter_pics_csv(fichier_csv, seuil_cpu=80.0, seuil_mem=80.0):
 
 
 def main():
+    """Point d'entrée principal pour l'exécution du script.
+    """
     # Noms de fichiers par défaut (faciles à modifier)
     csv_default_name = './SysWatch/Exports/syswatch_history.csv'
     json_default_name = './SysWatch/Exports/last_metrics.json'
@@ -160,7 +163,7 @@ def main():
 
     options = lire_arguments(sys.argv[1:])
 
-    # Utiliser les chemins tels quels : pas d'horodatage automatique
+    # Utiliser les chemins tels quels
     csv_file = options.csv
     json_file = options.json
     if options.stats:
