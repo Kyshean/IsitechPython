@@ -52,7 +52,7 @@ def display_disk_info():
         print(f"  Pourcentage utilisé: {partition_usage.percent}%\n")
 
 if __name__ == "__main__":
-    display_processor_info()
     display_system_info()
+    display_processor_info()
     display_ram_info()
     display_disk_info()
