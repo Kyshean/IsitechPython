@@ -43,10 +43,10 @@ __Utilisation__ : ```python
 python ./SysWatch/syswatch_v3.py --Options
  ```
 
-__Options disponibles__ : 
-    1. *--continu* : Effectue un scan en continu.
-    2. *--stats* : Fais des moyennes en fonction des fichiers CSV et JSON précédemments exécutés 
-    3. *--intervalle* : Spécifie l'intervalle entre deux instantanés des informations
-    4. *--nombre* : Spécifie le nombre de fois ou ce scan sera exécuté
-    5. *--csv* : Spécifie le format par défaut de l'output. (DEFAULT VALUE)
-    6. *--json* : Spécifie le format de sortie par défaut.
+**Options disponibles** : 
+1. *--continu* : Effectue un scan en continu.
+2. *--stats* : Fais des moyennes en fonction des fichiers CSV et JSON précédemments exécutés 
+3. *--intervalle* : Spécifie l'intervalle entre deux instantanés des informations
+4. *--nombre* : Spécifie le nombre de fois ou ce scan sera exécuté
+5. *--csv* : Spécifie le format par défaut de l'output. (DEFAULT VALUE)
+6. *--json* : Spécifie le format de sortie par défaut.
