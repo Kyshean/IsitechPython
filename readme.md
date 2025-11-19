@@ -40,8 +40,7 @@ Contient 3 versions du script, ainsi que les modules **traitement** et **collect
     Troisième script, utilisant les modules collector et traitement pour output le résultat dans le terminal ainsi que dans un répertoire nommé "Exports".
 
 __Utilisation__ : ```python
-python ./SysWatch/syswatch_v3.py --Options
- ```
+python ./SysWatch/syswatch_v3.py --Options```
 
 **Options disponibles** : 
 1. *--continu* : Effectue un scan en continu.
