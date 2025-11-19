@@ -1,3 +1,5 @@
 VenV/
 __pycache__
 SysWatch/syswatch_v3.py
+SysWatch/Exports/last_metrics.json
+SysWatch/Exports/syswatch_history.csv

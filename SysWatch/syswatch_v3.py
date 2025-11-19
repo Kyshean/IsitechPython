@@ -109,13 +109,17 @@ def detecter_pics_csv(fichier_csv, seuil_cpu=80.0, seuil_mem=80.0):
 
 
 def main():
+    # Noms de fichiers par défaut (faciles à modifier)
+    csv_default_name = './SysWatch/Exports/syswatch_history.csv'
+    json_default_name = './SysWatch/Exports/last_metrics.json'
+
     valeurs_defaut = {
         'continu': False,
         'intervalle': 5,
         'nombre': 0,
         'stats': False,
-        'csv': './SysWatch/Exports/syswatch_history.csv',
-        'json': './SysWatch/Exports/last_metrics.json',
+        'csv': csv_default_name,
+        'json': json_default_name,
     }
 
     def lire_arguments(liste_arguments):
@@ -156,16 +160,9 @@ def main():
 
     options = lire_arguments(sys.argv[1:])
 
-# Nommage des fichiers par défaut
-    csv_default_name = './SysWatch/Exports/syswatch_history.csv'
-    json_default_name = './SysWatch/Exports/last_metrics.json'
+    # Utiliser les chemins tels quels : pas d'horodatage automatique
     csv_file = options.csv
     json_file = options.json
-    if csv_file.endswith(os.path.basename(csv_default_name)):
-        csv_file = csv_file.replace('.csv', f'_{ts}.csv')
-    if json_file.endswith(os.path.basename(json_default_name)):
-        json_file = json_file.replace('.json', f'_{ts}.json')
-
     if options.stats:
         stats = calculer_stats(options.csv)
         if stats is None:
