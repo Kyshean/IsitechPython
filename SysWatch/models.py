@@ -72,5 +72,3 @@ host_measured = SystemMetrics(
     memory_percent=mem_percent,
     disk_usage=disk_info
 )
-
-print(host_measured)
