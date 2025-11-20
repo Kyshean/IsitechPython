@@ -48,3 +48,12 @@ __Utilisation__ : ```python ./SysWatch/syswatch_v3.py --Options```
 4. *--nombre* : Spécifie le nombre de fois ou ce scan sera exécuté
 5. *--csv* : Spécifie le format par défaut de l'output. (DEFAULT VALUE)
 6. *--json* : Spécifie le format de sortie par défaut.
+___
+
+Bibliographie utilisée tout au long du tp: 
+
+- Documentation Officielle de Python : https://docs.python.org/fr/3/
+- StackOverflow forums d'entraide anglophone : https://stackoverflow.com/questions/
+- Github Copilot - pour expliquer et aider à formuler certaines fonctions
+- W3Schools - cours en ligne gratuit pour Python, surtout pour la manip de fichiers https://www.w3schools.com/python/
+- Documentation psutils https://psutil.readthedocs.io/en/latest/
